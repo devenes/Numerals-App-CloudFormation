@@ -84,14 +84,14 @@ Ten         Warning with "Not Valid! Please enter a number between 1 and 3999, i
 ## Project Skeleton
 
 ```
-001-roman-numerals-converter (folder)
-|----cli.sh            # To be delivered by students (CLI commands)
-|----readme.md         # Given to the students (Definition of the project)
-|----cfn-template.yml  # To be delivered by students (Cloudformation template)
-|----app.py            # Given to the students (Definition of the project)
+roman-numerals-converter (folder)
+|----cli.sh            # CLI commands
+|----readme.md         # Definition of the project
+|----cfn-template.yml  # Cloudformation template
+|----app.py            # Definition of the project
 |----templates
-        |----index.html  # Given to the students (HTML template)
-        |----result.html # Given to the students (HTML template)
+        |----index.html  # HTML template
+        |----result.html # HTML template
 ```
 
 ## Expected Outcome
