@@ -9,6 +9,26 @@ Parameters:
     Description: Enter the name of your Key Pair for SSH connections
     Type: AWS::EC2::KeyPair::KeyName
 
+  InstanceType:
+    Description: WebServer EC2 instance type
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t1.micro
+      - t2.micro
+      - m1.small
+      - m1.medium
+      - m1.large
+      - m1.xlarge
+      - m2.xlarge
+      - m2.2xlarge
+      - m2.4xlarge
+      - m3.xlarge
+      - m3.2xlarge
+      - c1.medium
+      - c1.xlarge
+    ConstraintDescription: must be a valid EC2 instance type.
+
 Resources:
   WebServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -29,7 +49,7 @@ Resources:
     Properties:
       KeyName: !Ref KeyName
       ImageId: ami-033b95fb8079dc481
-      InstanceType: t2.micro
+      InstanceType: !Ref InstanceType
       SecurityGroupIds:
         - !Ref WebServerSecurityGroup
       UserData: !Base64 |
@@ -38,11 +58,11 @@ Resources:
         yum install python3 -y
         pip3 install flask
         cd /home/ec2-user
-        wget https://raw.githubusercontent.com/devenes/Roman-Numerals-Converter/main/app.py
+        wget https://raw.githubusercontent.com/devenes/numerals-app-cloudformation/main/app.py
         mkdir templates
         cd templates
-        wget https://raw.githubusercontent.com/devenes/Roman-Numerals-Converter/main/templates/index.html
-        wget https://raw.githubusercontent.com/devenes/Roman-Numerals-Converter/main/templates/result.html
+        wget https://raw.githubusercontent.com/devenes/numerals-app-cloudformation/main/templates/index.html
+        wget https://raw.githubusercontent.com/devenes/numerals-app-cloudformation/main/templates/result.html
         cd ..
         python3 app.py
       Tags:
