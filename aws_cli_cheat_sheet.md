@@ -1,12 +1,18 @@
+# AWS CLI Cheat Sheet
+
 ```bash
 sudo hostnamectl set-hostname aws-cli
+```
+
+```bash
+bash
 ```
 
 ```bash
 aws --version
 ```
 
-- version2 yi yükleyelim:
+## Install AWS CLI Version 2
 
 ```bash
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -27,13 +33,13 @@ Default region name [None]: us-east-1
 Default output format [None]: json
 ```
 
-- konfigürasyonun tamamlandığını kontrol edelim:
+### Check AWS CLI Configuration
 
-  ```bash
-  aws sts get-caller-identity --query Account --output text
-  ```
+```bash
+aws sts get-caller-identity --query Account --output text
+```
 
-1. Security Groupların oluşturulması:
+## 1. Create Security Groups
 
 ```bash
 aws ec2 create-security-group \
@@ -41,53 +47,55 @@ aws ec2 create-security-group \
  --description "This Sec Group is to allow ssh and http from anywhere"
 ```
 
-We can check the security Group with these commands:
+We can check the Security Groups with the following command:
 
 ```bash
 aws ec2 describe-security-groups --group-names roman_numbers_sec_grp
 ```
 
-You can check IPs with this command into the EC2:
+You can check IP Addresses of the Security Group with the following command:
 
 ```bash
 curl https://checkip.amazonaws.com
 ```
 
-2. Create Rules
+## 2. Create Rules for the Security Groups
 
-   ```bash
-   aws ec2 authorize-security-group-ingress \
-    --group-name roman_numbers_sec_grp \
-    --protocol tcp \
-    --port 22 \
-    --cidr 0.0.0.0/0
-   ```
+```bash
+aws ec2 authorize-security-group-ingress \
+ --group-name roman_numbers_sec_grp \
+ --protocol tcp \
+ --port 22 \
+ --cidr 0.0.0.0/0
+```
 
-   ```bash
-   aws ec2 authorize-security-group-ingress \
-   --group-name roman_numbers_sec_grp \
-   --protocol tcp \
-   --port 80 \
-   --cidr 0.0.0.0/0
-   ```
+```bash
+aws ec2 authorize-security-group-ingress \
+--group-name roman_numbers_sec_grp \
+--protocol tcp \
+--port 80 \
+--cidr 0.0.0.0/0
+```
 
-3. After creating security Groups, We will create our EC2s. Latest AMI id should be used.
+## 3. Create EC2 Instance
 
-Bu en son AMIyi bulmak için kullanılacak komuttur.
+After creating Security Groups, we will create our EC2 instances.
 
-- ilk olarak son ami bilgilerini çekelim
+- Latest AMI id should be used.
+
+### Get the latest AMI id with the following command:
 
 ```bash
 aws ssm get-parameters --names /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2 --region us-east-1
 ```
 
-- ikinci aşamada query çalıştırarak son ami numarasını elde edelim
+### Get the latest AMI id with using query:
 
 ```bash
 aws ssm get-parameters --names /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2 --query 'Parameters[0].[Value]' --output text
 ```
 
-- sonra bu değeri bir variable a atayalım:
+### Assign the value to a variable:
 
 ```bash
 LATEST_AMI=$(aws ssm get-parameters --names /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2 --query 'Parameters[0].[Value]' --output text)
@@ -97,19 +105,19 @@ LATEST_AMI=$(aws ssm get-parameters --names /aws/service/ami-amazon-linux-latest
 echo $LATEST_AMI
 ```
 
-- userdata dosyamızı oluşturalım
+### Create `userdata.sh` file:
 
 ```bash
 sudo vim userdata.sh
 ```
 
-- şimdi de instance ı çalıştıralım:
+### Run EC2 Instance with `userdata.sh` file:
 
 ```bash
 aws ec2 run-instances --image-id $LATEST_AMI --count 1 --instance-type t2.micro --key-name xxxxxxx --security-groups roman_numbers_sec_grp --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=roman_numbers}]' --user-data file:///Users/ODG/Desktop/git_dir/devenes-cw/porfolio_lesson_plan/week_6/CLI_solution/userdata.sh
 ```
 
-veya
+### Or use the following command:
 
 ```bash
 aws ec2 run-instances \
