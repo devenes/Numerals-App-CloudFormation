@@ -39,7 +39,7 @@ Default output format [None]: json
 aws sts get-caller-identity --query Account --output text
 ```
 
-## 1. Create Security Groups
+### Create Security Groups
 
 ```bash
 aws ec2 create-security-group \
@@ -47,7 +47,7 @@ aws ec2 create-security-group \
  --description "This Sec Group is to allow ssh and http from anywhere"
 ```
 
-We can check the Security Groups with the following command:
+Check Security Groups with the following command:
 
 ```bash
 aws ec2 describe-security-groups --group-names roman_numbers_sec_grp
@@ -59,7 +59,7 @@ You can check IP Addresses of the Security Group with the following command:
 curl https://checkip.amazonaws.com
 ```
 
-## 2. Create Rules for the Security Groups
+### Create Rules for the Security Groups
 
 ```bash
 aws ec2 authorize-security-group-ingress \
@@ -77,7 +77,7 @@ aws ec2 authorize-security-group-ingress \
 --cidr 0.0.0.0/0
 ```
 
-## 3. Create EC2 Instance
+### Create EC2 Instance
 
 After creating Security Groups, we will create our EC2 instances.
 
@@ -130,13 +130,13 @@ aws ec2 run-instances \
  --user-data file:///home/ec2-user/userdata.sh
 ```
 
-- To see the each instances Ip we\'ll use describe instance CLI command:
+### To see the each instances Ip we'll use `describe instance` CLI command:
 
 ```bash
 aws ec2 describe-instances --filters "Name=tag:Name,Values=roman_numbers"
 ```
 
-- You can run the query to find Public IP and instance_id of instances:
+### You can run the query to find `Public IP` and `Instance ID` of instances:
 
 ```bash
 aws ec2 describe-instances --filters "Name=tag:Name,Values=roman_numbers" --query 'Reservations[].Instances[].PublicIpAddress[]'
@@ -146,17 +146,17 @@ aws ec2 describe-instances --filters "Name=tag:Name,Values=roman_numbers" --quer
 aws ec2 describe-instances --filters "Name=tag:Name,Values=roman_numbers" --query 'Reservations[].Instances[].InstanceId[]'
 ```
 
-- To delete instances:
+### Delete Instances:
 
-  ```bash
-  aws ec2 terminate-instances --instance-ids xxxxxxxxxxxx
-  ```
+```bash
+aws ec2 terminate-instances --instance-ids xxxxxxxxxxxx
+```
 
-- To delete security groups:
+### Delete Security Groups:
 
-  ```bash
-  aws ec2 delete-security-group --group-name roman_numbers_sec_grp
-  ```
+```bash
+aws ec2 delete-security-group --group-name roman_numbers_sec_grp
+```
 
 ### Resources
 
